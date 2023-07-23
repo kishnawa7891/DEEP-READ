@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DEEP READ</title>
+    <link rel="stylesheet" href="videostyles.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Header section -->
+    <header>
+        <div class="logo">
+            <img src="deep.png" alt="My Website Logo">
+        </div>
+        <div class="quote">
+            <p>कठिनाइयाँ तो आएंगी, पर आपका इरादा बुलंद रहना चाहिए</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#contact"><button>Contact</button></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main content area -->
+    <div class="services-heading">
+        <h2>Free Videos</h2>
+    </div>
+    <h2>Upload Free Videos</h2>
+    <form id="videoUploadForm" enctype="multipart/form-data">
+        <input type="file" name="videoFile" id="videoFile" accept="video/*">
+        <input type="text" name="videoName" placeholder="Enter a name for the Video">
+        <button type="submit">Upload</button>
+    </form>
+    <div id="uploadedVideosList">
+        <!-- List of uploaded videos will be displayed here -->
+    </div>
+
+    <script>
+        const videoUploadForm = document.getElementById('videoUploadForm');
+        const uploadedVideosList = document.getElementById('uploadedVideosList');
+
+        videoUploadForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const videoFileInput = document.getElementById('videoFile');
+            const videoGivenNameInput = document.querySelector('input[name="videoName"]');
+
+            // Create a FormData object to send the video and name to the server
+            const formData = new FormData();
+            formData.append('videoFile', videoFileInput.files[0]);
+            formData.append('videoGivenName', videoGivenNameInput.value);
+
+            // Send the video to the server using fetch or XMLHttpRequest
+            fetch('/uploadVideo', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // After receiving the server response, update the list of uploaded videos
+                const videoFileName = data.videoFileName;
+                const videoDisplayName = data.videoDisplayName;
+
+                // Add the uploaded video to the list
+                const videoListItem = document.createElement('li');
+                videoListItem.textContent = `${videoDisplayName} - ${videoFileName}`;
+                uploadedVideosList.appendChild(videoListItem);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+    </main>
+
+    <!-- Footer section -->
+    <footer>
+        <section id="contact">
+            <p>Email:intrenddk@gmail.com</p>
+            <p>Phone:7891766290</p>
+        </section>
+        <p>&copy; 2023  All rights reserved.</p>
+    </footer>
+</body>
+</html>

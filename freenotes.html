@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DEEP READ</title>
+    <link rel="stylesheet" href="notesstyles.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Header section -->
+    <header>
+        <div class="logo">
+            <img src="deep.png" alt="My Website Logo">
+        </div>
+        <div class="quote">
+            <p>कठिनाइयाँ तो आएंगी, पर आपका इरादा बुलंद रहना चाहिए</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#contact"><button>Contact</button></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main content area -->
+    <div class="services-heading">
+        <h2>PDF NOTES</h2>
+    </div>
+
+    <h2>Upload Your PDF</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="pdfFile" id="pdfFile" accept=".pdf">
+        <input type="text" name="givenName" placeholder="Enter a name for the PDF">
+        <button type="submit">Upload</button>
+    </form>
+    <div id="uploadedFilesList">
+        <!-- List of uploaded files will be displayed here -->
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const uploadedFilesList = document.getElementById('uploadedFilesList');
+
+        uploadForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const fileInput = document.getElementById('pdfFile');
+            const givenNameInput = document.querySelector('input[name="givenName"]');
+
+            // Create a FormData object to send the file and given name to the server
+            const formData = new FormData();
+            formData.append('pdfFile', fileInput.files[0]);
+            formData.append('givenName', givenNameInput.value);
+
+            // Send the file to the server using fetch or XMLHttpRequest
+            // Example using fetch:
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // After receiving the server response, update the list of uploaded files
+                const fileName = data.fileName;
+                const displayName = data.displayName;
+
+                const fileListItem = document.createElement('li');
+                fileListItem.textContent = `${displayName} - ${fileName}`;
+                uploadedFilesList.appendChild(fileListItem);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+    </main>
+
+    <!-- Footer section -->
+    <footer>
+        <section id="contact">
+            <p>Email:intrenddk@gmail.com</p>
+            <p>Phone:7891766290</p>
+        </section>
+        <p>&copy; 2023  All rights reserved.</p>
+    </footer>
+</body>
+</html>
